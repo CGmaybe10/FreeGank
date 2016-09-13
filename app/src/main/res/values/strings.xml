@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">FreeGank</string>
+
+    <string name="category_daily">每日推荐</string>
+    <string name="category_android">android</string>
+    <string name="category_app">APP</string>
+    <string name="category_expend">拓展资源</string>
+    <string name="category_web">前端</string>
+    <string name="category_video">休息视频</string>
+    <string name="category_random">瞎推荐</string>
+    <string name="category_welfare">福利</string>
+    <string name="category_ios">ios</string>
 </resources>
