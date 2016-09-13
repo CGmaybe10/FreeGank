@@ -1,7 +1,9 @@
-package com.freegank;
+package com.freegank.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.freegank.R;
 
 public class MainActivity extends AppCompatActivity {
 
