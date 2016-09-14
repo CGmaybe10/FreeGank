@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">FreeGank</string>
 
+    <string name="base_url">http://gank.io/api/</string>
+
     <string name="category_daily">每日推荐</string>
     <string name="category_android">android</string>
     <string name="category_app">APP</string>

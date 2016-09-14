@@ -4,27 +4,16 @@ package com.freegank.bean;
  * Created by moubiao on 2016/9/13.
  * gank中android，ios,前端等数据详情
  */
-public class DeatailData {
-
-    /**
-     * _id : 56cc6d23421aa95caa707a69
-     * createdAt : 2015-08-06T07:15:52.65Z
-     * desc : 类似Link Bubble的悬浮式操作设计
-     * publishedAt : 2015-08-07T03:57:48.45Z
-     * type : Android
-     * url : https://github.com/recruit-lifestyle/FloatingView
-     * used : true
-     * who : mthli
-     */
-
+public class DetailData {
     private String _id;
     private String createdAt;
     private String desc;
     private String publishedAt;
     private String type;
     private String url;
-    private boolean used;
     private String who;
+    private String source;
+    private boolean used;
 
     public String get_id() {
         return _id;
@@ -88,5 +77,13 @@ public class DeatailData {
 
     public void setWho(String who) {
         this.who = who;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }
