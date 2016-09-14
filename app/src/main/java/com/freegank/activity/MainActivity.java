@@ -2,6 +2,8 @@ package com.freegank.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,8 +12,11 @@ import android.widget.Button;
 
 import com.freegank.R;
 import com.freegank.adapter.DailyAdapter;
+import com.freegank.adapter.MainAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DailyOverviewData;
+import com.freegank.fragment.CategoryFragment;
+import com.freegank.fragment.DailyFragment;
 import com.freegank.http.GankApiService;
 
 import java.util.ArrayList;
@@ -27,12 +32,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends BaseActivity {
     private final String TAG = "moubiao";
-    private final String REGEX = "\\b((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+.(jpg|jpeg|png)\\b";
 
-    private TabLayout mTabLayout;
-    private RecyclerView mContentRY;
-    private DailyAdapter mDailyAdapter;
-    private List<DailyOverviewData> mDailyData;
+    private MainAdapter mMainAdapter;
 
     @Override
     public int onLayout() {
@@ -48,69 +49,54 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initData() {
-        mDailyData = new ArrayList<>();
-        mDailyAdapter = new DailyAdapter(this, mDailyData);
+        DailyFragment dailyFG = new DailyFragment();
+        CategoryFragment oneFG = new CategoryFragment();
+        CategoryFragment twoFG = new CategoryFragment();
+        CategoryFragment threeFG = new CategoryFragment();
+        CategoryFragment fiveFG = new CategoryFragment();
+        CategoryFragment sixFG = new CategoryFragment();
+        CategoryFragment sevenFG = new CategoryFragment();
+        CategoryFragment eightFG = new CategoryFragment();
+        CategoryFragment nineFG = new CategoryFragment();
+        List<Fragment> data = new ArrayList<>();
+        data.add(dailyFG);
+        data.add(oneFG);
+        data.add(twoFG);
+        data.add(threeFG);
+        data.add(fiveFG);
+        data.add(sixFG);
+        data.add(sevenFG);
+        data.add(eightFG);
+        data.add(nineFG);
+
+        List<String> tabTitle = new ArrayList<>();
+        tabTitle.add(getString(R.string.category_daily));
+        tabTitle.add(getString(R.string.category_android));
+        tabTitle.add(getString(R.string.category_app));
+        tabTitle.add(getString(R.string.category_expend));
+        tabTitle.add(getString(R.string.category_web));
+        tabTitle.add(getString(R.string.category_video));
+        tabTitle.add(getString(R.string.category_random));
+        tabTitle.add(getString(R.string.category_welfare));
+        tabTitle.add(getString(R.string.category_ios));
+        mMainAdapter = new MainAdapter(getSupportFragmentManager(), data, tabTitle);
     }
 
     private void initView() {
-        mTabLayout = (TabLayout) findViewById(R.id.category_tab);
-        mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_daily)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_android)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_app)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_expend)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_web)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_video)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_random)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_welfare)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.category_ios)));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.category_tab);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
 
-        mContentRY = (RecyclerView) findViewById(R.id.category_ry);
-        mContentRY.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mContentRY.setAdapter(mDailyAdapter);
-
-        Button button = (Button) findViewById(R.id.request_bt);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(getString(R.string.base_url))
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                GankApiService gankService = retrofit.create(GankApiService.class);
-                Call<BaseData<DailyOverviewData>> call = gankService.getDailyOverview(String.valueOf(10), String.valueOf(1));
-                call.enqueue(new Callback<BaseData<DailyOverviewData>>() {
-                    @Override
-                    public void onResponse(Call<BaseData<DailyOverviewData>> call, Response<BaseData<DailyOverviewData>> response) {
-                        BaseData<DailyOverviewData> data = response.body();
-                        List<DailyOverviewData> daily = data.getResults();
-
-                        for (DailyOverviewData da : daily) {
-                            String s = da.getContent();
-
-                            Pattern pattern = Pattern.compile(REGEX);
-                            Matcher matcher = pattern.matcher(s);
-
-                            if (matcher.find()) {
-                                da.setContent(matcher.group());
-//                                Log.d(TAG, "onClick: Found value0: " + matcher.group());
-                            } else {
-                                da.setContent(null);
-                            }
-                        }
-                        DailyOverviewData d = daily.get(0);
-                        String content = d.getContent();
-                        mDailyData.addAll(daily);
-                        mDailyAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onFailure(Call<BaseData<DailyOverviewData>> call, Throwable t) {
-                        Log.e(TAG, "onFailure: " + t.getMessage());
-                    }
-                });
-            }
-        });
+        ViewPager contentVP = (ViewPager) findViewById(R.id.tab_content_vp);
+        contentVP.setAdapter(mMainAdapter);
+        tabLayout.setupWithViewPager(contentVP);
     }
 }
