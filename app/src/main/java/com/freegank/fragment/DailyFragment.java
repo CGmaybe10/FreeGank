@@ -19,13 +19,10 @@ import com.freegank.bean.BaseData;
 import com.freegank.bean.DailyOverviewData;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
+import com.freegank.util.StringUtil;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +54,12 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
         initData();
     }
 
+    private void initData() {
+        mContext = getContext();
+        mDailyData = new ArrayList<>();
+        mDailyAdapter = new DailyAdapter(mContext, mDailyData);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,14 +76,8 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
         swipeToLoadLayout.setRefreshing(true);
 
         mContentRY = (RecyclerView) view.findViewById(R.id.swipe_target);
-        mContentRY.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mContentRY.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mContentRY.setAdapter(mDailyAdapter);
-    }
-
-    private void initData() {
-        mContext = getActivity();
-        mDailyData = new ArrayList<>();
-        mDailyAdapter = new DailyAdapter(mContext, mDailyData);
     }
 
     @Override
@@ -100,7 +97,7 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
      * 获取服务器数据
      */
     private void getRemoteData(final boolean refresh) {
-        GankApiService gankService = RetrofitHelper.getRetrofitService(getContext(), GankApiService.class);
+        GankApiService gankService = RetrofitHelper.getRetrofitService(mContext, GankApiService.class);
         Call<BaseData<DailyOverviewData>> call = gankService.getDailyOverview(String.valueOf(mQuantity), String.valueOf(mPage));
         call.enqueue(new Callback<BaseData<DailyOverviewData>>() {
             @Override
@@ -109,7 +106,6 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
                 BaseData<DailyOverviewData> result = response.body();
                 List<DailyOverviewData> dailyList = result.getResults();
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 for (DailyOverviewData daily : dailyList) {
                     //转化标题
                     String title = daily.getContent();
@@ -122,13 +118,8 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
                     }
 
                     //转化日期
-                    try {
-                        Date date = format.parse(daily.getPublishedAt());
-                        String transDate = format.format(date);
-                        daily.setPublishedAt(transDate);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    String date = StringUtil.transformFormat(daily.getPublishedAt(), "yyyy-MM-dd");
+                    daily.setPublishedAt(date);
                 }
                 mDailyData.addAll(dailyList);
                 mDailyAdapter.notifyDataSetChanged();
