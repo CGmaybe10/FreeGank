@@ -70,6 +70,7 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
         swipeToLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.swipeToLoadLayout);
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
+        swipeToLoadLayout.setRefreshing(true);
 
         mContentRY = (RecyclerView) view.findViewById(R.id.swipe_target);
         mContentRY.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
