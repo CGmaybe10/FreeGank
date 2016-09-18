@@ -6,40 +6,47 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
+import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
+import com.aspsine.swipetoloadlayout.OnRefreshListener;
+import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.freegank.R;
 import com.freegank.adapter.DailyAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DailyOverviewData;
 import com.freegank.http.GankApiService;
+import com.freegank.http.RetrofitHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by moubiao on 2016/9/14.
+ * 每日推荐的fragment
  */
-public class DailyFragment extends Fragment {
+public class DailyFragment extends Fragment implements OnRefreshListener, OnLoadMoreListener {
     private final String TAG = "moubiao";
     private final String REGEX = "\\b((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+.(jpg|jpeg|png)\\b";
 
     private Context mContext;
+    private int mQuantity = 10;
+    private int mPage = 1;
+
+    private SwipeToLoadLayout swipeToLoadLayout;
     private RecyclerView mContentRY;
-    private TextView mTitleTV;
 
     private DailyAdapter mDailyAdapter;
     private List<DailyOverviewData> mDailyData;
@@ -53,9 +60,20 @@ public class DailyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.daily_overview, container, false);
-        initView(view);
-        return view;
+        return inflater.inflate(R.layout.daily_overview, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        swipeToLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.swipeToLoadLayout);
+        swipeToLoadLayout.setOnRefreshListener(this);
+        swipeToLoadLayout.setOnLoadMoreListener(this);
+
+        mContentRY = (RecyclerView) view.findViewById(R.id.swipe_target);
+        mContentRY.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mContentRY.setAdapter(mDailyAdapter);
     }
 
     private void initData() {
@@ -64,53 +82,73 @@ public class DailyFragment extends Fragment {
         mDailyAdapter = new DailyAdapter(mContext, mDailyData);
     }
 
-    private void initView(View view) {
-        mContentRY = (RecyclerView) view.findViewById(R.id.content_ry);
-        mContentRY.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mContentRY.setAdapter(mDailyAdapter);
+    @Override
+    public void onRefresh() {
+        mPage = 1;
+        mDailyData.clear();
+        getRemoteData(true);
+    }
 
-        Button button = (Button) view.findViewById(R.id.request_bt);
-        button.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onLoadMore() {
+        mPage += 1;
+        getRemoteData(false);
+    }
+
+    /**
+     * 获取服务器数据
+     */
+    private void getRemoteData(final boolean refresh) {
+        GankApiService gankService = RetrofitHelper.getRetrofitService(getContext(), GankApiService.class);
+        Call<BaseData<DailyOverviewData>> call = gankService.getDailyOverview(String.valueOf(mQuantity), String.valueOf(mPage));
+        call.enqueue(new Callback<BaseData<DailyOverviewData>>() {
             @Override
-            public void onClick(View view) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(getString(R.string.base_url))
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+            public void onResponse(Call<BaseData<DailyOverviewData>> call, Response<BaseData<DailyOverviewData>> response) {
+                hideProgressBar(refresh);
+                BaseData<DailyOverviewData> result = response.body();
+                List<DailyOverviewData> dailyList = result.getResults();
 
-                GankApiService gankService = retrofit.create(GankApiService.class);
-                Call<BaseData<DailyOverviewData>> call = gankService.getDailyOverview(String.valueOf(10), String.valueOf(1));
-                call.enqueue(new Callback<BaseData<DailyOverviewData>>() {
-                    @Override
-                    public void onResponse(Call<BaseData<DailyOverviewData>> call, Response<BaseData<DailyOverviewData>> response) {
-                        BaseData<DailyOverviewData> data = response.body();
-                        List<DailyOverviewData> daily = data.getResults();
-
-                        for (DailyOverviewData da : daily) {
-                            String s = da.getContent();
-
-                            Pattern pattern = Pattern.compile(REGEX);
-                            Matcher matcher = pattern.matcher(s);
-
-                            if (matcher.find()) {
-                                da.setContent(matcher.group());
-//                                Log.d(TAG, "onClick: Found value0: " + matcher.group());
-                            } else {
-                                da.setContent(null);
-                            }
-                        }
-                        DailyOverviewData d = daily.get(0);
-                        String content = d.getContent();
-                        mDailyData.addAll(daily);
-                        mDailyAdapter.notifyDataSetChanged();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                for (DailyOverviewData daily : dailyList) {
+                    //转化标题
+                    String title = daily.getContent();
+                    Pattern pattern = Pattern.compile(REGEX);
+                    Matcher matcher = pattern.matcher(title);
+                    if (matcher.find()) {
+                        daily.setContent(matcher.group());
+                    } else {
+                        daily.setContent(null);
                     }
 
-                    @Override
-                    public void onFailure(Call<BaseData<DailyOverviewData>> call, Throwable t) {
-                        Log.e(TAG, "onFailure: " + t.getMessage());
+                    //转化日期
+                    try {
+                        Date date = format.parse(daily.getPublishedAt());
+                        String transDate = format.format(date);
+                        daily.setPublishedAt(transDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+                mDailyData.addAll(dailyList);
+                mDailyAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<BaseData<DailyOverviewData>> call, Throwable t) {
+                hideProgressBar(refresh);
+                t.printStackTrace();
             }
         });
+    }
+
+    /**
+     * 隐藏刷新或者加载更多的进度条
+     */
+    private void hideProgressBar(boolean refresh) {
+        if (refresh) {
+            swipeToLoadLayout.setRefreshing(false);
+        } else {
+            swipeToLoadLayout.setLoadingMore(false);
+        }
     }
 }

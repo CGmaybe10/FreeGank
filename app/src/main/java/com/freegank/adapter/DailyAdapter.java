@@ -41,7 +41,8 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
         Picasso.with(mContext)
                 .load(data.getContent())
                 .into(holder.mImageView);
-        holder.mTitleView.setText(data.getTitle());
+        holder.mTitleTV.setText(data.getTitle());
+        holder.mDateTV.setText(data.getPublishedAt());
     }
 
     @Override
@@ -51,12 +52,14 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
 
     class DailyViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImageView;
-        private TextView mTitleView;
+        private TextView mTitleTV;
+        private TextView mDateTV;
 
         public DailyViewHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.overview_img);
-            mTitleView = (TextView) itemView.findViewById(R.id.overview_title_tx);
+            mTitleTV = (TextView) itemView.findViewById(R.id.overview_title_tx);
+            mDateTV = (TextView) itemView.findViewById(R.id.overview_date_tx);
         }
     }
 }
