@@ -9,6 +9,7 @@ import com.freegank.R;
 import com.freegank.adapter.MainAdapter;
 import com.freegank.fragment.CategoryFragment;
 import com.freegank.fragment.DailyFragment;
+import com.freegank.fragment.WelfareFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,10 +65,7 @@ public class MainActivity extends BaseActivity {
         iosData.putString(CategoryFragment.CATEGORY, getString(R.string.category_ios));
         iosFG.setArguments(iosData);
 
-        CategoryFragment welfareFG = new CategoryFragment();
-        Bundle welfareData = new Bundle();
-        welfareData.putString(CategoryFragment.CATEGORY, getString(R.string.category_welfare));
-        welfareFG.setArguments(welfareData);
+        WelfareFragment welfareFG = new WelfareFragment();
 
         List<Fragment> data = new ArrayList<>();
         data.add(dailyFG);
