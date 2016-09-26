@@ -38,6 +38,8 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareV
     public void onBindViewHolder(WelfareViewHolder holder, int position) {
         Picasso.with(mContext)
                 .load(mData.get(position).getUrl())
+                .placeholder(R.drawable.default_ic)
+                .error(R.drawable.error_ic)
                 .into(holder.mWelfareImg);
     }
 
@@ -49,7 +51,7 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareV
     class WelfareViewHolder extends RecyclerView.ViewHolder {
         private ImageView mWelfareImg;
 
-        public WelfareViewHolder(View itemView) {
+        WelfareViewHolder(View itemView) {
             super(itemView);
             mWelfareImg = (ImageView) itemView.findViewById(R.id.welfare_img);
         }
