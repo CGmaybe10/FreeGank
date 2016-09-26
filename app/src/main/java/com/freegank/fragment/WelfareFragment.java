@@ -73,6 +73,7 @@ public class WelfareFragment extends Fragment implements OnRefreshListener, OnLo
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.welfare_divider_height)));
         mRecyclerView.setAdapter(mAdapter);
     }
 

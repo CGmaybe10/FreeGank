@@ -77,6 +77,7 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
 
         mContentRY = (RecyclerView) view.findViewById(R.id.swipe_target);
         mContentRY.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        mContentRY.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.daily_divider_height)));
         mContentRY.setAdapter(mDailyAdapter);
     }
 

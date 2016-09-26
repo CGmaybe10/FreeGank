@@ -8,4 +8,12 @@
     <dimen name="refresh_header_height_twitter">80dp</dimen>
     <dimen name="load_more_footer_height_twitter">60dp</dimen>
     <dimen name="load_more_footer_height_classic">60dp</dimen>
+
+    <dimen name="daily_elevation">8dp</dimen>
+    <dimen name="daily_corner_radius">8dp</dimen>
+    <dimen name="daily_divider_height">10dp</dimen>
+
+    <dimen name="welfare_divider_height">7dp</dimen>
+    <dimen name="welfare_corner_radius">8dp</dimen>
+    <dimen name="welfare_elevation">8dp</dimen>
 </resources>
