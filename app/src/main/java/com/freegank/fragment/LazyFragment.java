@@ -25,11 +25,16 @@ public abstract class LazyFragment extends Fragment {
         isVisible = isVisibleToUser;
         if (isVisible) {
             onVisible();
+        } else {
+            onInvisible();
         }
 
         Log.d(TAG, "setUserVisibleHint: is visible = " + isVisible);
     }
 
+    /**
+     * 子类在初始化完view后使用super调用该方法
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -45,6 +50,13 @@ public abstract class LazyFragment extends Fragment {
             loadData();
             isFirst = false;
         }
+    }
+
+    /**
+     * fragment不可见时
+     */
+    protected void onInvisible() {
+
     }
 
     /**

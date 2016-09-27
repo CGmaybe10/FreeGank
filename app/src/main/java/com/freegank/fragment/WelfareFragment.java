@@ -72,6 +72,7 @@ public class WelfareFragment extends LazyFragment implements OnRefreshListener, 
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.welfare_divider_height)));
         mRecyclerView.setAdapter(mAdapter);
+
         super.onViewCreated(view, savedInstanceState);
     }
 
