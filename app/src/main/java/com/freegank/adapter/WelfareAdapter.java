@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.freegank.R;
 import com.freegank.bean.DetailData;
+import com.freegank.interfaces.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareV
 
     private Context mContext;
     private List<DetailData> mData;
+    private OnItemClickListener mClickListener;
 
     public WelfareAdapter(Context context, List<DetailData> data) {
         mContext = context;
@@ -35,17 +37,31 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareV
     }
 
     @Override
-    public void onBindViewHolder(WelfareViewHolder holder, int position) {
+    public void onBindViewHolder(final WelfareViewHolder holder, int position) {
         Picasso.with(mContext)
                 .load(mData.get(position).getUrl())
                 .placeholder(R.drawable.default_ic)
                 .error(R.drawable.error_ic)
                 .into(holder.mWelfareImg);
+
+        holder.mWelfareImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickListener.OnClick(v, holder.getLayoutPosition());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    /**
+     * 设置点击图片的监听器
+     */
+    public void setOnItemClickListener(OnItemClickListener clickListener) {
+        mClickListener = clickListener;
     }
 
     class WelfareViewHolder extends RecyclerView.ViewHolder {

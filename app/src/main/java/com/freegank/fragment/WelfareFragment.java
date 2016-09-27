@@ -1,6 +1,7 @@
 package com.freegank.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +14,14 @@ import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.freegank.R;
+import com.freegank.activity.MeiZhiActivity;
 import com.freegank.adapter.WelfareAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DetailData;
+import com.freegank.bean.IntentConstant;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
+import com.freegank.interfaces.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/18.
  * 福利界面的fragment
  */
-public class WelfareFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener {
+public class WelfareFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     private final String TAG = "moubiao";
 
     private Context mContext;
@@ -54,6 +58,7 @@ public class WelfareFragment extends LazyFragment implements OnRefreshListener, 
         mContext = getContext();
         mData = new ArrayList<>();
         mAdapter = new WelfareAdapter(mContext, mData);
+        mAdapter.setOnItemClickListener(this);
     }
 
     @Nullable
@@ -79,6 +84,13 @@ public class WelfareFragment extends LazyFragment implements OnRefreshListener, 
     @Override
     protected void loadData() {
         mLoadLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void OnClick(View view, int position) {
+        Intent intent = new Intent(mContext, MeiZhiActivity.class);
+        intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getUrl());
+        startActivity(intent);
     }
 
     @Override
