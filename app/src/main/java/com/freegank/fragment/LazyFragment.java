@@ -28,8 +28,6 @@ public abstract class LazyFragment extends Fragment {
         } else {
             onInvisible();
         }
-
-        Log.d(TAG, "setUserVisibleHint: is visible = " + isVisible);
     }
 
     /**
