@@ -20,7 +20,7 @@ public class MainActivity extends BaseActivity {
     private MainAdapter mMainAdapter;
 
     @Override
-    public int onLayout() {
+    public int getLayoutResId() {
         return R.layout.activity_main;
     }
 

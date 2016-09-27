@@ -18,7 +18,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(onLayout());
+        setContentView(getLayoutResId());
         setStatusBarTranslucent();
     }
 
@@ -37,5 +37,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public abstract int onLayout();
+    public abstract int getLayoutResId();
 }
