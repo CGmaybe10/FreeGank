@@ -33,7 +33,7 @@ public abstract class LazyFragment extends Fragment {
     }
 
     /**
-     * 子类在初始化完view后使用super调用该方法
+     * 必须在子类初始化完view后使用super调用该方法，否则会出现空指针
      */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
