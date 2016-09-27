@@ -75,6 +75,7 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.category_divider_height)));
         mRecyclerView.setAdapter(mAdapter);
 
         super.onViewCreated(view, savedInstanceState);
