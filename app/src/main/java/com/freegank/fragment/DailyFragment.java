@@ -3,7 +3,6 @@ package com.freegank.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,7 +33,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * 每日推荐的fragment
  */
-public class DailyFragment extends Fragment implements OnRefreshListener, OnLoadMoreListener {
+public class DailyFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener {
     private final String TAG = "moubiao";
     private final String REGEX = "\\b((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+.(jpg|jpeg|png)\\b";
 
@@ -68,17 +67,21 @@ public class DailyFragment extends Fragment implements OnRefreshListener, OnLoad
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         swipeToLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.swipeToLoadLayout);
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
-        swipeToLoadLayout.setRefreshing(true);
 
         mContentRY = (RecyclerView) view.findViewById(R.id.swipe_target);
         mContentRY.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mContentRY.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.daily_divider_height)));
         mContentRY.setAdapter(mDailyAdapter);
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    protected void loadData() {
+        swipeToLoadLayout.setRefreshing(true);
     }
 
     @Override

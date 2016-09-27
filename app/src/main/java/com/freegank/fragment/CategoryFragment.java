@@ -3,7 +3,6 @@ package com.freegank.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,7 +30,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * android,ios等分类页面的fragment
  */
-public class CategoryFragment extends Fragment implements OnRefreshListener, OnLoadMoreListener {
+public class CategoryFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener {
     private final String TAG = "moubiao";
     public static final String CATEGORY = "category";
 
@@ -70,16 +69,20 @@ public class CategoryFragment extends Fragment implements OnRefreshListener, OnL
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         mLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.category_refresh);
         mLoadLayout.setOnRefreshListener(this);
         mLoadLayout.setOnLoadMoreListener(this);
-        mLoadLayout.setRefreshing(true);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    protected void loadData() {
+        mLoadLayout.setRefreshing(true);
     }
 
     @Override

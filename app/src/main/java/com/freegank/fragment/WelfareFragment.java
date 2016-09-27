@@ -3,7 +3,6 @@ package com.freegank.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -31,7 +30,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/18.
  * 福利界面的fragment
  */
-public class WelfareFragment extends Fragment implements OnRefreshListener, OnLoadMoreListener {
+public class WelfareFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener {
     private final String TAG = "moubiao";
 
     private Context mContext;
@@ -65,16 +64,20 @@ public class WelfareFragment extends Fragment implements OnRefreshListener, OnLo
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.welfare_refresh);
         mLoadLayout.setOnRefreshListener(this);
         mLoadLayout.setOnLoadMoreListener(this);
-        mLoadLayout.setRefreshing(true);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.welfare_divider_height)));
         mRecyclerView.setAdapter(mAdapter);
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    protected void loadData() {
+        mLoadLayout.setRefreshing(true);
     }
 
     @Override
