@@ -1,13 +1,15 @@
 package com.freegank.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.freegank.R;
 import com.freegank.bean.IntentConstant;
+import com.freegank.util.DisplayUtil;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -41,7 +43,9 @@ public class MeiZhiActivity extends BaseActivity {
     }
 
     private void initView() {
-        hideToolbar();
+        mToolbar.setTranslationY(-DisplayUtil.getActionBarHeight(this) * 2);
+        isToolBarHiding = true;
+        mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
         mMeiZhiIMG = (ImageView) findViewById(R.id.mei_zhi_img);
         Picasso.with(this)
                 .load(IMG_URL)
@@ -57,15 +61,18 @@ public class MeiZhiActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 隐藏toolbar
-     */
-    private void hideToolbar() {
-        TypedValue typedValue = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
-            int height = TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
-            mToolbar.setTranslationY(-height);
-            isToolBarHiding = true;
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
 }
