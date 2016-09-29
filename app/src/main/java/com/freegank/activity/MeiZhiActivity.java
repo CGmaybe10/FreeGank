@@ -131,6 +131,9 @@ public class MeiZhiActivity extends BaseActivity {
             case R.id.save_mei_zhi_img:
                 saveMeiZhiImg();
                 break;
+            case R.id.share_mei_zhi_menu:
+                sharedMeiZhiImg();
+                break;
             default:
                 break;
         }
@@ -178,6 +181,10 @@ public class MeiZhiActivity extends BaseActivity {
                         Snackbar.make(mMeiZhiIMG, getString(R.string.common_save_success), Snackbar.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void sharedMeiZhiImg() {
+        Snackbar.make(mMeiZhiIMG, "暂不支持", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

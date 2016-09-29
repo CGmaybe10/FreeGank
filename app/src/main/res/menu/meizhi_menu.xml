@@ -8,4 +8,10 @@
         android:title="@string/common_save"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/share_mei_zhi_menu"
+        android:icon="@drawable/ic_common_share"
+        android:title="@string/common_share"
+        app:showAsAction="ifRoom"/>
+
 </menu>
