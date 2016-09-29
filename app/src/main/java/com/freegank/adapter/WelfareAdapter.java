@@ -40,8 +40,8 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareV
     public void onBindViewHolder(final WelfareViewHolder holder, int position) {
         Picasso.with(mContext)
                 .load(mData.get(position).getUrl())
-                .placeholder(R.drawable.default_ic)
-                .error(R.drawable.error_ic)
+                .placeholder(R.drawable.ic_default)
+                .error(R.drawable.ic_error)
                 .into(holder.mWelfareImg);
 
         holder.mWelfareImg.setOnClickListener(new View.OnClickListener() {

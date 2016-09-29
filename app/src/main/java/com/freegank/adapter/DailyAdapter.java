@@ -40,8 +40,8 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
         DailyOverviewData data = mDailyData.get(position);
         Picasso.with(mContext)
                 .load(data.getContent())
-                .placeholder(R.drawable.default_ic)
-                .error(R.drawable.error_ic)
+                .placeholder(R.drawable.ic_default)
+                .error(R.drawable.ic_error)
                 .into(holder.mImageView);
         holder.mTitleTV.setText(data.getTitle());
         holder.mDateTV.setText(data.getPublishedAt());

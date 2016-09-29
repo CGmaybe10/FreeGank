@@ -12,7 +12,7 @@
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/default_ic"/>
+        android:src="@drawable/ic_default"/>
 
     <include
         layout="@layout/top_bar"/>

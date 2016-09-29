@@ -1,10 +1,15 @@
 package com.freegank.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +17,17 @@ import android.widget.ImageView;
 import com.freegank.R;
 import com.freegank.bean.IntentConstant;
 import com.freegank.util.DisplayUtil;
+import com.freegank.util.FileUtil;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.File;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by moubiao on 2016/9/27.
@@ -25,6 +40,9 @@ public class MeiZhiActivity extends BaseActivity {
     private String IMG_URL;
 
     private ImageView mMeiZhiIMG;
+    private Bitmap mBitmap;
+
+    private Subscription mSubscription;
 
     @Override
     public int getLayoutResId() {
@@ -55,9 +73,25 @@ public class MeiZhiActivity extends BaseActivity {
         mMeiZhiIMG = (ImageView) findViewById(R.id.mei_zhi_img);
         Picasso.with(this)
                 .load(IMG_URL)
-                .placeholder(R.drawable.default_ic)
-                .error(R.drawable.error_ic)
-                .into(mMeiZhiIMG);
+                .placeholder(R.drawable.ic_default)
+                .error(R.drawable.ic_error)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        mMeiZhiIMG.setImageBitmap(bitmap);
+                        mBitmap = bitmap;
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
 
         mMeiZhiIMG.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,15 +117,75 @@ public class MeiZhiActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.meizhi_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                break;
+            case R.id.save_mei_zhi_img:
+                saveMeiZhiImg();
                 break;
             default:
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 保存图片
+     */
+    private void saveMeiZhiImg() {
+        mSubscription = Observable.create(new Observable.OnSubscribe<Uri>() {
+            @Override
+            public void call(Subscriber<? super Uri> subscriber) {
+                if (mBitmap == null || !FileUtil.isSDCardEnable()) {
+                    Snackbar.make(mMeiZhiIMG, getString(R.string.common_save_failed), Snackbar.LENGTH_SHORT).show();
+                } else {
+                    String[] fileNames = IMG_URL.split(File.separator);
+                    Uri uri = FileUtil.saveBitmapToSDCard(mBitmap, fileNames[fileNames.length - 1], getString(R.string.app_name));
+                    if (uri == null) {
+                        subscriber.onError(new Exception(getString(R.string.common_save_failed)));
+                    } else {
+                        subscriber.onNext(uri);
+                        subscriber.onCompleted();
+                    }
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Uri>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Snackbar.make(mMeiZhiIMG, e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(Uri uri) {
+                        Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+                        sendBroadcast(scannerIntent);
+                        Snackbar.make(mMeiZhiIMG, getString(R.string.common_save_success), Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mSubscription != null) {
+            mSubscription.unsubscribe();
+        }
     }
 }

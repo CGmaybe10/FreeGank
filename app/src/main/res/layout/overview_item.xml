@@ -18,7 +18,7 @@
             android:layout_height="200dp"
             android:contentDescription="@string/app_name"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_ic"/>
+            android:src="@drawable/ic_default"/>
 
         <TextView
             android:id="@+id/overview_title_tx"
