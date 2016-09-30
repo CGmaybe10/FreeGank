@@ -14,6 +14,7 @@ import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.freegank.R;
+import com.freegank.activity.DailyDetailActivity;
 import com.freegank.activity.MeiZhiActivity;
 import com.freegank.adapter.DailyAdapter;
 import com.freegank.bean.BaseData;
@@ -155,8 +156,19 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
 
     @Override
     public void OnClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), MeiZhiActivity.class);
-        intent.putExtra(IntentConstant.MEI_ZHI_URL, mDailyData.get(position).getContent());
+        Intent intent = new Intent();
+        switch (view.getId()) {
+            case R.id.overview_img:
+                intent.setClass(mContext, MeiZhiActivity.class);
+                intent.putExtra(IntentConstant.MEI_ZHI_URL, mDailyData.get(position).getContent());
+                break;
+            case R.id.overview_title_tx:
+                intent.setClass(mContext, DailyDetailActivity.class);
+                intent.putExtra(IntentConstant.DAILY_DATE, mDailyData.get(position).getPublishedAt());
+                break;
+            default:
+                break;
+        }
         startActivity(intent);
     }
 }

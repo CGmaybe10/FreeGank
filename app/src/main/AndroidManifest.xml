@@ -21,6 +21,9 @@
             </intent-filter>
         </activity>
 
+        <!--每日详情界面-->
+        <activity android:name=".activity.DailyDetailActivity"/>
+
         <!--查看图片的activity-->
         <activity android:name=".activity.MeiZhiActivity"/>
     </application>
