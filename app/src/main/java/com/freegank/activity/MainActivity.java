@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager;
 import com.freegank.R;
 import com.freegank.adapter.MainAdapter;
 import com.freegank.fragment.CategoryFragment;
-import com.freegank.fragment.DailyFragment;
+import com.freegank.fragment.DailyRecommendFragment;
 import com.freegank.fragment.WelfareFragment;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initData() {
-        DailyFragment dailyFG = new DailyFragment();
+        DailyRecommendFragment dailyFG = new DailyRecommendFragment();
 
         CategoryFragment androidFG = new CategoryFragment();
         Bundle androidData = new Bundle();

@@ -74,7 +74,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
         private TextView mTitleTV;
         private TextView mDateTV;
 
-        public DailyViewHolder(View itemView) {
+        DailyViewHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.overview_img);
             mTitleTV = (TextView) itemView.findViewById(R.id.overview_title_tx);

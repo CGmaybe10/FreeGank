@@ -37,7 +37,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * 每日推荐的fragment
  */
-public class DailyFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
+public class DailyRecommendFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     private final String TAG = "moubiao";
     private final String REGEX = "\\b((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+.(jpg|jpeg|png)\\b";
 
