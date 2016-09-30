@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.freegank.R;
 import com.freegank.bean.DailyOverviewData;
+import com.freegank.interfaces.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
 
     private Context mContext;
     private List<DailyOverviewData> mDailyData;
+    private OnItemClickListener mClickListener;
 
     public DailyAdapter(Context context, List<DailyOverviewData> dailyData) {
         mContext = context;
@@ -45,11 +47,26 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
                 .into(holder.mImageView);
         holder.mTitleTV.setText(data.getTitle());
         holder.mDateTV.setText(data.getPublishedAt());
+
+        setListener(holder, position);
     }
 
     @Override
     public int getItemCount() {
         return mDailyData.size();
+    }
+
+    private void setListener(final DailyViewHolder holder, final int position) {
+        holder.mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickListener.OnClick(holder.mImageView, position);
+            }
+        });
+    }
+
+    public void setOnItemClickListener(OnItemClickListener clickListener) {
+        mClickListener = clickListener;
     }
 
     class DailyViewHolder extends RecyclerView.ViewHolder {

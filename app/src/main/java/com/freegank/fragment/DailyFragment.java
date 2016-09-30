@@ -1,6 +1,7 @@
 package com.freegank.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,11 +14,14 @@ import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.freegank.R;
+import com.freegank.activity.MeiZhiActivity;
 import com.freegank.adapter.DailyAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DailyOverviewData;
+import com.freegank.bean.IntentConstant;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
+import com.freegank.interfaces.OnItemClickListener;
 import com.freegank.util.StringUtil;
 
 import java.util.ArrayList;
@@ -33,7 +37,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * 每日推荐的fragment
  */
-public class DailyFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener {
+public class DailyFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     private final String TAG = "moubiao";
     private final String REGEX = "\\b((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+.(jpg|jpeg|png)\\b";
 
@@ -57,6 +61,7 @@ public class DailyFragment extends LazyFragment implements OnRefreshListener, On
         mContext = getContext();
         mDailyData = new ArrayList<>();
         mDailyAdapter = new DailyAdapter(mContext, mDailyData);
+        mDailyAdapter.setOnItemClickListener(this);
     }
 
     @Nullable
@@ -146,5 +151,12 @@ public class DailyFragment extends LazyFragment implements OnRefreshListener, On
         } else {
             swipeToLoadLayout.setLoadingMore(false);
         }
+    }
+
+    @Override
+    public void OnClick(View view, int position) {
+        Intent intent = new Intent(getActivity(), MeiZhiActivity.class);
+        intent.putExtra(IntentConstant.MEI_ZHI_URL, mDailyData.get(position).getContent());
+        startActivity(intent);
     }
 }
