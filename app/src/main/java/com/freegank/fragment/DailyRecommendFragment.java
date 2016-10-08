@@ -23,9 +23,10 @@ import com.freegank.bean.IntentConstant;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
-import com.freegank.util.StringUtil;
+import com.freegank.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -128,8 +129,9 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
                     }
 
                     //转化日期
-                    String date = StringUtil.transformFormat(daily.getPublishedAt(), "yyyy-MM-dd");
-                    daily.setPublishedAt(date);
+                    Date date = DateUtil.string2Date(daily.getPublishedAt(), "yyyy-MM-dd");
+                    String dateStr = DateUtil.date2String(date, "yyyy/MM/dd");
+                    daily.setPublishedAt(dateStr);
                 }
                 mDailyData.addAll(dailyList);
                 mDailyAdapter.notifyDataSetChanged();
@@ -164,6 +166,7 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
                 break;
             case R.id.overview_title_tx:
                 intent.setClass(mContext, DailyDetailActivity.class);
+                intent.putExtra(IntentConstant.MEI_ZHI_URL, mDailyData.get(position).getContent());
                 intent.putExtra(IntentConstant.DAILY_DATE, mDailyData.get(position).getPublishedAt());
                 break;
             default:

@@ -5,6 +5,8 @@
     <string name="common_save">保存</string>
     <string name="common_save_failed">保存失败</string>
     <string name="common_save_success">保存成功</string>
+    <string name="common_load_data_success">数据加载成功</string>
+    <string name="common_load_data_failed">数据加载失败</string>
 
     <string name="base_url">http://gank.io/api/</string>
 

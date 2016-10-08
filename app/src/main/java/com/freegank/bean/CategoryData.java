@@ -10,6 +10,8 @@ import java.util.List;
 public class CategoryData {
     private List<DetailData> Android;
     private List<DetailData> iOS;
+    @SerializedName("前端")
+    private List<DetailData> web;
     @SerializedName("休息视频")
     private List<DetailData> video;
     @SerializedName("拓展资源")
@@ -34,6 +36,14 @@ public class CategoryData {
 
     public void setiOS(List<DetailData> iOS) {
         this.iOS = iOS;
+    }
+
+    public List<DetailData> getWeb() {
+        return web;
+    }
+
+    public void setWeb(List<DetailData> web) {
+        this.web = web;
     }
 
     public List<DetailData> getVideo() {
