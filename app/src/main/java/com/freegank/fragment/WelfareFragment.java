@@ -87,7 +87,7 @@ public class WelfareFragment extends LazyFragment implements OnRefreshListener, 
     }
 
     @Override
-    public void OnClick(View view, int position) {
+    public void OnItemClick(View view, int position) {
         Intent intent = new Intent(mContext, MeiZhiActivity.class);
         intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getUrl());
         startActivity(intent);

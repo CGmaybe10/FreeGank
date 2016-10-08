@@ -60,14 +60,14 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.DailyViewHol
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mClickListener.OnClick(holder.mImageView, position);
+                mClickListener.OnItemClick(holder.mImageView, position);
             }
         });
 
         holder.mTitleTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mClickListener.OnClick(holder.mTitleTV, position);
+                mClickListener.OnItemClick(holder.mTitleTV, position);
             }
         });
     }

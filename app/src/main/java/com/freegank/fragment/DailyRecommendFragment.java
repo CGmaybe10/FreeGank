@@ -155,7 +155,7 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
     }
 
     @Override
-    public void OnClick(View view, int position) {
+    public void OnItemClick(View view, int position) {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.overview_img:

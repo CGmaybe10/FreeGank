@@ -47,7 +47,7 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareV
         holder.mWelfareImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mClickListener.OnClick(v, holder.getLayoutPosition());
+                mClickListener.OnItemClick(v, holder.getLayoutPosition());
             }
         });
     }
