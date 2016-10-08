@@ -6,7 +6,7 @@ import java.util.List;
  * Created by moubiao on 2016/9/14.
  * gank每日数据
  */
-public class DailyData {
+public class DailyDetailData {
 
     private boolean error;
     private List<String> category;

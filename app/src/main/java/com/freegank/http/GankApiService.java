@@ -1,8 +1,7 @@
 package com.freegank.http;
 
 import com.freegank.bean.BaseData;
-import com.freegank.bean.CategoryData;
-import com.freegank.bean.DailyData;
+import com.freegank.bean.DailyDetailData;
 import com.freegank.bean.DailyOverviewData;
 import com.freegank.bean.DetailData;
 
@@ -22,5 +21,5 @@ public interface GankApiService {
     Call<BaseData<DetailData>> getCategoryData(@Path("category") String category, @Path("quantity") String quantity, @Path("page") String page);
 
     @GET("day/{date}")
-    Call<DailyData> getDailyData(@Path("date") String date);
+    Call<DailyDetailData> getDailyData(@Path("date") String date);
 }
