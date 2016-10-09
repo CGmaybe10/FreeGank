@@ -141,12 +141,8 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
 
     @Override
     public void OnItemClick(View view, int position) {
-        if (getString(R.string.category_video).equals(mCategory)) {
-
-        } else {
-            Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
-            intent.putExtra(IntentConstant.CONTENT_URL, mCategoryData.get(position).getUrl());
-            startActivity(intent);
-        }
+        Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
+        intent.putExtra(IntentConstant.CONTENT_URL, mCategoryData.get(position).getUrl());
+        startActivity(intent);
     }
 }
