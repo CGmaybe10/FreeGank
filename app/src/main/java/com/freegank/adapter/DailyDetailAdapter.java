@@ -22,7 +22,6 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
 
     private Context mContext;
     private List<DetailData> mDetailData;
-    private String mType = "";
 
     public DailyDetailAdapter(Context context, List<DetailData> detailData) {
         mContext = context;
@@ -38,13 +37,16 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
     @Override
     public void onBindViewHolder(DailyDetailAdapter.DailyDetailViewHolder holder, int position) {
         DetailData data = mDetailData.get(position);
-        if (!mType.equals(data.getType())) {
+        if (position == 0) {
             showCategoryTitle(holder.mCategoryTV, true);
-            holder.mCategoryTV.setText(data.getType());
         } else {
-            showCategoryTitle(holder.mCategoryTV, false);
+            if (data.getType().equals(mDetailData.get(position - 1).getType())) {
+                showCategoryTitle(holder.mCategoryTV, false);
+            } else {
+                showCategoryTitle(holder.mCategoryTV, true);
+            }
         }
-        mType = data.getType();
+        holder.mCategoryTV.setText(data.getType());
         holder.mDescribeTV.setText(data.getDesc());
     }
 
@@ -56,8 +58,8 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
     /**
      * 是否显示分类标题
      */
-    private void showCategoryTitle(View view, boolean show) {
-        if (show) {
+    private void showCategoryTitle(View view, boolean display) {
+        if (display) {
             view.setVisibility(View.VISIBLE);
         } else {
             view.setVisibility(View.GONE);
