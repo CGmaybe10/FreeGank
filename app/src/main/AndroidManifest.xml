@@ -26,6 +26,9 @@
 
         <!--查看图片的activity-->
         <activity android:name=".activity.MeiZhiActivity"/>
+
+        <!--查看详细内容界面-->
+        <activity android:name=".activity.ContentDetailActivity"/>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.freegank.R;
@@ -16,6 +17,7 @@ import com.freegank.bean.DetailData;
 import com.freegank.bean.IntentConstant;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
+import com.freegank.interfaces.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import retrofit2.Response;
  * 每日详情的界面
  */
 
-public class DailyDetailActivity extends BaseActivity {
+public class DailyDetailActivity extends BaseActivity implements OnItemClickListener {
     private final String TAG = "moubiao";
 
     private Intent mData;
@@ -57,6 +59,7 @@ public class DailyDetailActivity extends BaseActivity {
     private void initData() {
         mDetailData = new ArrayList<>();
         mDetailAdapter = new DailyDetailAdapter(this, mDetailData);
+        mDetailAdapter.setOnItemClickListener(this);
 
         mData = getIntent();
         mDate = mData.getStringExtra(IntentConstant.DAILY_DATE);
@@ -115,5 +118,12 @@ public class DailyDetailActivity extends BaseActivity {
         mDailyDetailRV = (RecyclerView) findViewById(R.id.daily_detail_rv);
         mDailyDetailRV.setAdapter(mDetailAdapter);
         mDailyDetailRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+    }
+
+    @Override
+    public void OnItemClick(View view, int position) {
+        Intent intent = new Intent(DailyDetailActivity.this, ContentDetailActivity.class);
+        intent.putExtra(IntentConstant.CONTENT_URL, mDetailData.get(position).getUrl());
+        startActivity(intent);
     }
 }

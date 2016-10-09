@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.freegank.R;
 import com.freegank.bean.DetailData;
+import com.freegank.interfaces.OnItemClickListener;
 
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
     private Context mContext;
     private List<DetailData> mDetailData;
 
+    private OnItemClickListener mItemClickListener;
+
     public DailyDetailAdapter(Context context, List<DetailData> detailData) {
         mContext = context;
         mDetailData = detailData;
@@ -35,7 +38,7 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
     }
 
     @Override
-    public void onBindViewHolder(DailyDetailAdapter.DailyDetailViewHolder holder, int position) {
+    public void onBindViewHolder(final DailyDetailAdapter.DailyDetailViewHolder holder, int position) {
         DetailData data = mDetailData.get(position);
         if (position == 0) {
             showCategoryTitle(holder.mCategoryTV, true);
@@ -48,6 +51,13 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
         }
         holder.mCategoryTV.setText(data.getType());
         holder.mDescribeTV.setText(data.getDesc());
+
+        holder.mDescribeTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemClickListener.OnItemClick(v, holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -64,6 +74,10 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
         } else {
             view.setVisibility(View.GONE);
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
     }
 
     class DailyDetailViewHolder extends RecyclerView.ViewHolder {
