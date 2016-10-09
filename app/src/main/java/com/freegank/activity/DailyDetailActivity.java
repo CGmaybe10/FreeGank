@@ -3,6 +3,7 @@ package com.freegank.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,7 @@ import retrofit2.Response;
  * 每日详情的界面
  */
 
-public class DailyDetailActivity extends BaseActivity implements OnItemClickListener {
+public class DailyDetailActivity extends BaseActivity implements OnItemClickListener, View.OnClickListener {
     private final String TAG = "moubiao";
 
     private Intent mData;
@@ -42,6 +43,7 @@ public class DailyDetailActivity extends BaseActivity implements OnItemClickList
     private DailyDetailAdapter mDetailAdapter;
 
     private RecyclerView mDailyDetailRV;
+    private FloatingActionButton mVideoFAB;
 
     @Override
     public int getLayoutResId() {
@@ -118,12 +120,22 @@ public class DailyDetailActivity extends BaseActivity implements OnItemClickList
         mDailyDetailRV = (RecyclerView) findViewById(R.id.daily_detail_rv);
         mDailyDetailRV.setAdapter(mDetailAdapter);
         mDailyDetailRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        mVideoFAB = (FloatingActionButton) findViewById(R.id.video_fab);
+        mVideoFAB.setOnClickListener(this);
     }
 
     @Override
     public void OnItemClick(View view, int position) {
         Intent intent = new Intent(DailyDetailActivity.this, ContentDetailActivity.class);
         intent.putExtra(IntentConstant.CONTENT_URL, mDetailData.get(position).getUrl());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(DailyDetailActivity.this, ContentDetailActivity.class);
+        intent.putExtra(IntentConstant.CONTENT_URL, mDetailData.get(mDetailData.size() - 1).getUrl());
         startActivity(intent);
     }
 }
