@@ -52,6 +52,9 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
         holder.mCategoryTV.setText(data.getType());
         holder.mDescribeTV.setText(data.getDesc());
 
+        if (mItemClickListener == null) {
+            return;
+        }
         holder.mDescribeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

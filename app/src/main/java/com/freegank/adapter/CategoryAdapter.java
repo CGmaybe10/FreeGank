@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.freegank.R;
 import com.freegank.bean.DetailData;
+import com.freegank.interfaces.OnItemClickListener;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     private Context mContext;
     private List<DetailData> mDetailData;
+    private OnItemClickListener mItemClickListener;
 
     public CategoryAdapter(Context context, List<DetailData> detailData) {
         mContext = context;
@@ -34,15 +36,29 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     @Override
-    public void onBindViewHolder(CategoryViewHolder holder, int position) {
+    public void onBindViewHolder(final CategoryViewHolder holder, int position) {
         DetailData data = mDetailData.get(position);
         holder.mCategoryTitleTV.setText(data.getDesc());
         holder.mCategoryAuthorTV.setText(data.getWho());
+
+        if (mItemClickListener == null) {
+            return;
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemClickListener.OnItemClick(holder.mCategoryTitleTV, holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mDetailData.size();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
     }
 
     class CategoryViewHolder extends RecyclerView.ViewHolder {

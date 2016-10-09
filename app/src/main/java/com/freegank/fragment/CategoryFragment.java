@@ -1,6 +1,7 @@
 package com.freegank.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,11 +14,14 @@ import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.freegank.R;
+import com.freegank.activity.ContentDetailActivity;
 import com.freegank.adapter.CategoryAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DetailData;
+import com.freegank.bean.IntentConstant;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
+import com.freegank.interfaces.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * android,ios等分类页面的fragment
  */
-public class CategoryFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener {
+public class CategoryFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     private final String TAG = "moubiao";
     public static final String CATEGORY = "category";
 
@@ -59,6 +63,7 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
         mContext = getContext();
         mCategoryData = new ArrayList<>();
         mAdapter = new CategoryAdapter(getContext(), mCategoryData);
+        mAdapter.setOnItemClickListener(this);
     }
 
     @Nullable
@@ -132,5 +137,12 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
         } else {
             mLoadLayout.setLoadingMore(false);
         }
+    }
+
+    @Override
+    public void OnItemClick(View view, int position) {
+        Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
+        intent.putExtra(IntentConstant.CONTENT_URL, mCategoryData.get(position).getUrl());
+        startActivity(intent);
     }
 }
