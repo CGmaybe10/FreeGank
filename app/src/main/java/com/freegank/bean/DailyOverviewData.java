@@ -1,14 +1,49 @@
 package com.freegank.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by moubiao on 2016/9/13.
  * gank每日概要数据
  */
-public class DailyOverviewData {
+public class DailyOverviewData implements Parcelable {
     private String _id;
     private String content;
     private String publishedAt;
     private String title;
+
+    private DailyOverviewData(Parcel in) {
+        _id = in.readString();
+        content = in.readString();
+        publishedAt = in.readString();
+        title = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_id);
+        dest.writeString(content);
+        dest.writeString(publishedAt);
+        dest.writeString(title);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DailyOverviewData> CREATOR = new Creator<DailyOverviewData>() {
+        @Override
+        public DailyOverviewData createFromParcel(Parcel in) {
+            return new DailyOverviewData(in);
+        }
+
+        @Override
+        public DailyOverviewData[] newArray(int size) {
+            return new DailyOverviewData[size];
+        }
+    };
 
     public String get_id() {
         return _id;

@@ -2,7 +2,7 @@ package com.freegank.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by moubiao on 2016/9/14.
  * 主界面中viewpager的adapter
  */
-public class MainAdapter extends FragmentPagerAdapter {
+public class MainAdapter extends FragmentStatePagerAdapter {
     private final String TAG = "moubiao";
 
     private List<Fragment> mPageData;

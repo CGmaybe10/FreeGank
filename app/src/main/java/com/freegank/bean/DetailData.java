@@ -1,10 +1,13 @@
 package com.freegank.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by moubiao on 2016/9/13.
  * gank中android，ios,前端等数据详情
  */
-public class DetailData {
+public class DetailData implements Parcelable {
     private String _id;
     private String createdAt;
     private String desc;
@@ -14,6 +17,48 @@ public class DetailData {
     private String who;
     private String source;
     private boolean used;
+
+    private DetailData(Parcel in) {
+        _id = in.readString();
+        createdAt = in.readString();
+        desc = in.readString();
+        publishedAt = in.readString();
+        type = in.readString();
+        url = in.readString();
+        who = in.readString();
+        source = in.readString();
+        used = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_id);
+        dest.writeString(createdAt);
+        dest.writeString(desc);
+        dest.writeString(publishedAt);
+        dest.writeString(type);
+        dest.writeString(url);
+        dest.writeString(who);
+        dest.writeString(source);
+        dest.writeByte((byte) (used ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DetailData> CREATOR = new Creator<DetailData>() {
+        @Override
+        public DetailData createFromParcel(Parcel in) {
+            return new DetailData(in);
+        }
+
+        @Override
+        public DetailData[] newArray(int size) {
+            return new DetailData[size];
+        }
+    };
 
     public String get_id() {
         return _id;

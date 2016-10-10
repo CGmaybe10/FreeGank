@@ -23,9 +23,6 @@ import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +31,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * android,ios等分类页面的fragment
  */
-public class CategoryFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
+public class CategoryFragment extends LazyFragment<DetailData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     private final String TAG = "moubiao";
     public static final String CATEGORY = "category";
 
@@ -47,7 +44,6 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
     private SwipeToLoadLayout mLoadLayout;
     private RecyclerView mRecyclerView;
 
-    private List<DetailData> mCategoryData;
     private CategoryAdapter mAdapter;
 
     @Override
@@ -61,8 +57,7 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
         mCategory = date.getString(CATEGORY);
 
         mContext = getContext();
-        mCategoryData = new ArrayList<>();
-        mAdapter = new CategoryAdapter(getContext(), mCategoryData);
+        mAdapter = new CategoryAdapter(getContext(), mData);
         mAdapter.setOnItemClickListener(this);
     }
 
@@ -95,7 +90,7 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
     public void onRefresh() {
         mQuantity = 10;
         mPage = 1;
-        mCategoryData.clear();
+        mData.clear();
         getRemoteData(true);
     }
 
@@ -116,7 +111,7 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
             public void onResponse(Call<BaseData<DetailData>> call, Response<BaseData<DetailData>> response) {
                 hideProgressBar(refresh);
                 BaseData<DetailData> result = response.body();
-                mCategoryData.addAll(result.getResults());
+                mData.addAll(result.getResults());
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -142,7 +137,7 @@ public class CategoryFragment extends LazyFragment implements OnRefreshListener,
     @Override
     public void OnItemClick(View view, int position) {
         Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
-        intent.putExtra(IntentConstant.CONTENT_URL, mCategoryData.get(position).getUrl());
+        intent.putExtra(IntentConstant.CONTENT_URL, mData.get(position).getUrl());
         startActivity(intent);
     }
 }

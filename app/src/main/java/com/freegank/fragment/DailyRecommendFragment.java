@@ -25,7 +25,6 @@ import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
 import com.freegank.util.DateUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,7 +38,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * 每日推荐的fragment
  */
-public class DailyRecommendFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
+public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     private final String TAG = "moubiao";
     private final String REGEX = "\\b((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+.(jpg|jpeg|png)\\b";
 
@@ -51,7 +50,6 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
     private RecyclerView mContentRY;
 
     private DailyAdapter mDailyAdapter;
-    private List<DailyOverviewData> mDailyData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,8 +59,7 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
 
     private void initData() {
         mContext = getContext();
-        mDailyData = new ArrayList<>();
-        mDailyAdapter = new DailyAdapter(mContext, mDailyData);
+        mDailyAdapter = new DailyAdapter(mContext, mData);
         mDailyAdapter.setOnItemClickListener(this);
     }
 
@@ -94,7 +91,7 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
     @Override
     public void onRefresh() {
         mPage = 1;
-        mDailyData.clear();
+        mData.clear();
         getRemoteData(true);
     }
 
@@ -133,7 +130,7 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
                     String dateStr = DateUtil.date2String(date, "yyyy/MM/dd");
                     daily.setPublishedAt(dateStr);
                 }
-                mDailyData.addAll(dailyList);
+                mData.addAll(dailyList);
                 mDailyAdapter.notifyDataSetChanged();
             }
 
@@ -162,12 +159,12 @@ public class DailyRecommendFragment extends LazyFragment implements OnRefreshLis
         switch (view.getId()) {
             case R.id.overview_img:
                 intent.setClass(mContext, MeiZhiActivity.class);
-                intent.putExtra(IntentConstant.MEI_ZHI_URL, mDailyData.get(position).getContent());
+                intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getContent());
                 break;
             case R.id.overview_title_tx:
                 intent.setClass(mContext, DailyDetailActivity.class);
-                intent.putExtra(IntentConstant.MEI_ZHI_URL, mDailyData.get(position).getContent());
-                intent.putExtra(IntentConstant.DAILY_DATE, mDailyData.get(position).getPublishedAt());
+                intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getContent());
+                intent.putExtra(IntentConstant.DAILY_DATE, mData.get(position).getPublishedAt());
                 break;
             default:
                 break;

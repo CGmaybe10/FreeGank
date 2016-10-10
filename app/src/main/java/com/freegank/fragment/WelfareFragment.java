@@ -23,7 +23,6 @@ import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,7 +33,7 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/18.
  * 福利界面的fragment
  */
-public class WelfareFragment extends LazyFragment implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
+public class WelfareFragment extends LazyFragment<DetailData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     private final String TAG = "moubiao";
 
     private Context mContext;
@@ -44,7 +43,6 @@ public class WelfareFragment extends LazyFragment implements OnRefreshListener, 
     private SwipeToLoadLayout mLoadLayout;
     private RecyclerView mRecyclerView;
 
-    private List<DetailData> mData;
     private WelfareAdapter mAdapter;
 
     @Override
@@ -56,7 +54,6 @@ public class WelfareFragment extends LazyFragment implements OnRefreshListener, 
 
     private void initData() {
         mContext = getContext();
-        mData = new ArrayList<>();
         mAdapter = new WelfareAdapter(mContext, mData);
         mAdapter.setOnItemClickListener(this);
     }
