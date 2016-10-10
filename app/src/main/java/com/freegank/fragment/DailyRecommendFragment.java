@@ -131,7 +131,6 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
                     daily.setPublishedAt(dateStr);
                 }
                 mData.addAll(dailyList);
-                mDailyAdapter.notifyDataSetChanged();
             }
 
             @Override

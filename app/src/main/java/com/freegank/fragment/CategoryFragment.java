@@ -112,7 +112,6 @@ public class CategoryFragment extends LazyFragment<DetailData> implements OnRefr
                 hideProgressBar(refresh);
                 BaseData<DetailData> result = response.body();
                 mData.addAll(result.getResults());
-                mAdapter.notifyDataSetChanged();
             }
 
             @Override
