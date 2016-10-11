@@ -1,4 +1,4 @@
-package com.freegank.fragment;
+package com.freegank.view.recyclerViewHelper;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;

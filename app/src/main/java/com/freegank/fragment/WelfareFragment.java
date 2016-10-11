@@ -25,7 +25,8 @@ import com.freegank.constant.DataStatus;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
-import com.freegank.view.util.RCDiffStatusUtil;
+import com.freegank.view.recyclerViewHelper.CommonItemDecoration;
+import com.freegank.view.recyclerViewHelper.RCDiffStatusUtil;
 
 import java.util.List;
 

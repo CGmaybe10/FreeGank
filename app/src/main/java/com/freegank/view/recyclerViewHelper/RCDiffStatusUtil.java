@@ -1,4 +1,4 @@
-package com.freegank.view.util;
+package com.freegank.view.recyclerViewHelper;
 
 import android.content.Context;
 import android.view.LayoutInflater;
