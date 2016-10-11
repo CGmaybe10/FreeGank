@@ -55,7 +55,6 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
     private RecyclerView mContentRY;
     private RCDiffStatusUtil mDiffStatusUtil;
     private View mDiffStatusView;
-    private View mErrorView, mEmptyView, mLoadingView;
     private TextView mNoDataTV;
     private ImageButton mRefreshBT;
 
