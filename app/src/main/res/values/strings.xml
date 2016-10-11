@@ -19,4 +19,7 @@
     <string name="category_random">瞎推荐</string>
     <string name="category_welfare">福利</string>
     <string name="category_ios">iOS</string>
+
+    <string name="failed_refresh">数据加载失败，请刷新</string>
+    <string name="no_data_refresh">无数据，请下拉刷新</string>
 </resources>

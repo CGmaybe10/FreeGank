@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
@@ -20,10 +22,12 @@ import com.freegank.adapter.DailyAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DailyOverviewData;
 import com.freegank.bean.IntentConstant;
+import com.freegank.constant.DataStatus;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
 import com.freegank.util.DateUtil;
+import com.freegank.view.util.RCDiffStatusUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -38,7 +42,8 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * 每日推荐的fragment
  */
-public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
+public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> implements OnRefreshListener, OnLoadMoreListener,
+        OnItemClickListener, View.OnClickListener {
     private final String TAG = "moubiao";
     private final String REGEX = "\\b((https|http|ftp|rtsp|mms):\\/\\/)[^\\s]+.(jpg|jpeg|png)\\b";
 
@@ -48,6 +53,11 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
 
     private SwipeToLoadLayout swipeToLoadLayout;
     private RecyclerView mContentRY;
+    private RCDiffStatusUtil mDiffStatusUtil;
+    private View mDiffStatusView;
+    private View mErrorView, mEmptyView, mLoadingView;
+    private TextView mNoDataTV;
+    private ImageButton mRefreshBT;
 
     private DailyAdapter mDailyAdapter;
 
@@ -58,9 +68,11 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
     }
 
     private void initData() {
-        mContext = getContext();
+        mContext = getActivity();
         mDailyAdapter = new DailyAdapter(mContext, mData);
         mDailyAdapter.setOnItemClickListener(this);
+
+        mDiffStatusUtil = new RCDiffStatusUtil(mContext);
     }
 
     @Nullable
@@ -78,14 +90,27 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
         mContentRY = (RecyclerView) view.findViewById(R.id.swipe_target);
         mContentRY.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mContentRY.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.daily_divider_height)));
+
+        mDiffStatusView = mDiffStatusUtil.getStatusView(mContentRY);
+        mNoDataTV = (TextView) mDiffStatusView.findViewById(R.id.no_data_tv);
+        mRefreshBT = (ImageButton) mDiffStatusView.findViewById(R.id.refresh_bt);
+
+        mDailyAdapter.setDiffStatusView(mDiffStatusView);
         mContentRY.setAdapter(mDailyAdapter);
+
+        setListener();
 
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void setListener() {
+        mNoDataTV.setOnClickListener(this);
+        mRefreshBT.setOnClickListener(this);
+    }
+
     @Override
     protected void loadData() {
-        swipeToLoadLayout.setRefreshing(true);
+        getRemoteData(true);
     }
 
     @Override
@@ -131,11 +156,17 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
                     daily.setPublishedAt(dateStr);
                 }
                 mData.addAll(dailyList);
+                if (mData.size() == 0) {
+                    mDiffStatusUtil.setStatus(DataStatus.Status.EMPTY);
+                } else {
+                    mDiffStatusUtil.setStatus(DataStatus.Status.HAS_DATA);
+                }
             }
 
             @Override
             public void onFailure(Call<BaseData<DailyOverviewData>> call, Throwable t) {
                 hideProgressBar(refresh);
+                mDiffStatusUtil.setStatus(DataStatus.Status.ERROR);
                 t.printStackTrace();
             }
         });
@@ -169,5 +200,20 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
                 break;
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.no_data_tv:
+                mDiffStatusUtil.setStatus(DataStatus.Status.LOADING);
+                break;
+            case R.id.refresh_bt:
+                mDiffStatusUtil.setStatus(DataStatus.Status.LOADING);
+                break;
+            default:
+                break;
+        }
+        getRemoteData(true);
     }
 }
