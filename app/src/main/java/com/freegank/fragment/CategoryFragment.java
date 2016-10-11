@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
@@ -19,9 +21,11 @@ import com.freegank.adapter.CategoryAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DetailData;
 import com.freegank.bean.IntentConstant;
+import com.freegank.constant.DataStatus;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
+import com.freegank.view.util.RCDiffStatusUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +35,8 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/14.
  * android,ios等分类页面的fragment
  */
-public class CategoryFragment extends LazyFragment<DetailData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
+public class CategoryFragment extends LazyFragment<DetailData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener,
+        View.OnClickListener {
     private final String TAG = "moubiao";
     public static final String CATEGORY = "category";
 
@@ -43,7 +48,11 @@ public class CategoryFragment extends LazyFragment<DetailData> implements OnRefr
 
     private SwipeToLoadLayout mLoadLayout;
     private RecyclerView mRecyclerView;
+    private View mCategoryDiffView;
+    private TextView mNoDataTV;
+    private ImageButton mRefreshBT;
 
+    RCDiffStatusUtil mDiffStatusUtil;
     private CategoryAdapter mAdapter;
 
     @Override
@@ -56,9 +65,11 @@ public class CategoryFragment extends LazyFragment<DetailData> implements OnRefr
         Bundle date = getArguments();
         mCategory = date.getString(CATEGORY);
 
-        mContext = getContext();
+        mContext = getActivity();
         mAdapter = new CategoryAdapter(getContext(), mData);
         mAdapter.setOnItemClickListener(this);
+
+        mDiffStatusUtil = new RCDiffStatusUtil(mContext);
     }
 
     @Nullable
@@ -76,14 +87,26 @@ public class CategoryFragment extends LazyFragment<DetailData> implements OnRefr
         mRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.category_divider_height)));
+
+        mCategoryDiffView = mDiffStatusUtil.getStatusView(mRecyclerView);
+        mNoDataTV = (TextView) mCategoryDiffView.findViewById(R.id.no_data_tv);
+        mRefreshBT = (ImageButton) mCategoryDiffView.findViewById(R.id.refresh_bt);
+        mAdapter.setDiffView(mCategoryDiffView);
         mRecyclerView.setAdapter(mAdapter);
+
+        setListener();
 
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void setListener() {
+        mNoDataTV.setOnClickListener(this);
+        mRefreshBT.setOnClickListener(this);
+    }
+
     @Override
     protected void loadData() {
-        mLoadLayout.setRefreshing(true);
+        getRemoteData(true);
     }
 
     @Override
@@ -112,11 +135,17 @@ public class CategoryFragment extends LazyFragment<DetailData> implements OnRefr
                 hideProgressBar(refresh);
                 BaseData<DetailData> result = response.body();
                 mData.addAll(result.getResults());
+                if (mData.size() == 0) {
+                    mDiffStatusUtil.setStatus(DataStatus.Status.EMPTY);
+                } else {
+                    mDiffStatusUtil.setStatus(DataStatus.Status.HAS_DATA);
+                }
             }
 
             @Override
             public void onFailure(Call<BaseData<DetailData>> call, Throwable t) {
                 hideProgressBar(refresh);
+                mDiffStatusUtil.setStatus(DataStatus.Status.ERROR);
                 t.printStackTrace();
             }
         });
@@ -138,5 +167,20 @@ public class CategoryFragment extends LazyFragment<DetailData> implements OnRefr
         Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
         intent.putExtra(IntentConstant.CONTENT_URL, mData.get(position).getUrl());
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.no_data_tv:
+                mDiffStatusUtil.setStatus(DataStatus.Status.LOADING);
+                break;
+            case R.id.refresh_bt:
+                mDiffStatusUtil.setStatus(DataStatus.Status.LOADING);
+                break;
+            default:
+                break;
+        }
+        getRemoteData(true);
     }
 }

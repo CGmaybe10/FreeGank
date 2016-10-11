@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.freegank.R;
 import com.freegank.bean.DetailData;
+import com.freegank.constant.DataStatus;
 import com.freegank.interfaces.OnItemClickListener;
 
 import java.util.List;
@@ -17,57 +18,91 @@ import java.util.List;
  * Created by moubiao on 2016/9/18.
  * android，ios，前端等分类的adapter
  */
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final String TAG = "moubiao";
 
     private Context mContext;
     private List<DetailData> mDetailData;
     private OnItemClickListener mItemClickListener;
 
+    private View mDiffView;
+
     public CategoryAdapter(Context context, List<DetailData> detailData) {
         mContext = context;
         mDetailData = detailData;
     }
 
-    @Override
-    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.category_item, parent, false);
-        return new CategoryViewHolder(view);
+    public void setDiffView(View diffView) {
+        mDiffView = diffView;
     }
 
     @Override
-    public void onBindViewHolder(final CategoryViewHolder holder, int position) {
-        DetailData data = mDetailData.get(position);
-        holder.mCategoryTitleTV.setText(data.getDesc());
-        holder.mCategoryAuthorTV.setText(data.getWho());
-
-        if (mItemClickListener == null) {
-            return;
+    public int getItemViewType(int position) {
+        if (mDetailData.size() == 0 && mDiffView != null) {
+            return DataStatus.VIEW_TYPE_DIFF_STATUS;
+        } else {
+            return DataStatus.VIEW_TYPE_HAS_DATE;
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mItemClickListener.OnItemClick(holder.mCategoryTitleTV, holder.getAdapterPosition());
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == DataStatus.VIEW_TYPE_DIFF_STATUS) {
+            return new DiffStatusViewHolder(mDiffView);
+        } else {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.category_item, parent, false);
+            return new CategoryViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        int viewType = getItemViewType(position);
+        if (viewType != DataStatus.VIEW_TYPE_DIFF_STATUS) {
+            DetailData data = mDetailData.get(position);
+            ((CategoryViewHolder) holder).mCategoryTitleTV.setText(data.getDesc());
+            ((CategoryViewHolder) holder).mCategoryAuthorTV.setText(data.getWho());
+
+            if (mItemClickListener == null) {
+                return;
             }
-        });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.OnItemClick(((CategoryViewHolder) holder).mCategoryTitleTV, holder.getAdapterPosition());
+                }
+            });
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return mDetailData.size();
+        if (mDetailData.size() == 0 && mDiffView != null) {
+            return DataStatus.VIEW_TYPE_DIFF_STATUS;
+        } else {
+            return mDetailData.size();
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         mItemClickListener = itemClickListener;
     }
 
-    class CategoryViewHolder extends RecyclerView.ViewHolder {
+    private class CategoryViewHolder extends RecyclerView.ViewHolder {
         private TextView mCategoryTitleTV, mCategoryAuthorTV;
 
-        public CategoryViewHolder(View itemView) {
+        CategoryViewHolder(View itemView) {
             super(itemView);
             mCategoryTitleTV = (TextView) itemView.findViewById(R.id.category_title_tv);
             mCategoryAuthorTV = (TextView) itemView.findViewById(R.id.category_author_tv);
+        }
+    }
+
+    private class DiffStatusViewHolder extends RecyclerView.ViewHolder {
+
+        private DiffStatusViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.freegank.R;
 import com.freegank.bean.DetailData;
+import com.freegank.constant.DataStatus;
 import com.freegank.interfaces.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
@@ -18,43 +19,69 @@ import java.util.List;
  * Created by moubiao on 2016/9/18.
  * 福利界面的adapter
  */
-public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareViewHolder> {
+public class WelfareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final String TAG = "moubiao";
 
     private Context mContext;
-    private List<DetailData> mData;
+    private List<DetailData> mWelfareData;
     private OnItemClickListener mClickListener;
+
+    private View mWelfareDiffView;
 
     public WelfareAdapter(Context context, List<DetailData> data) {
         mContext = context;
-        mData = data;
+        mWelfareData = data;
+    }
+
+    public void setWelfareDiffView(View welfareDiffView) {
+        mWelfareDiffView = welfareDiffView;
     }
 
     @Override
-    public WelfareViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.welfare_item, parent, false);
-        return new WelfareViewHolder(view);
+    public int getItemViewType(int position) {
+        if (mWelfareData.size() == 0 && mWelfareDiffView != null) {
+            return DataStatus.VIEW_TYPE_DIFF_STATUS;
+        } else {
+            return DataStatus.VIEW_TYPE_HAS_DATE;
+        }
     }
 
     @Override
-    public void onBindViewHolder(final WelfareViewHolder holder, int position) {
-        Picasso.with(mContext)
-                .load(mData.get(position).getUrl())
-                .placeholder(R.drawable.ic_default)
-                .error(R.drawable.ic_error)
-                .into(holder.mWelfareImg);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == DataStatus.VIEW_TYPE_DIFF_STATUS) {
+            return new DiffViewHolder(mWelfareDiffView);
+        } else {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.welfare_item, parent, false);
+            return new WelfareViewHolder(view);
+        }
+    }
 
-        holder.mWelfareImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mClickListener.OnItemClick(v, holder.getLayoutPosition());
-            }
-        });
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        int viewType = getItemViewType(position);
+        if (viewType != DataStatus.VIEW_TYPE_DIFF_STATUS) {
+            Picasso.with(mContext)
+                    .load(mWelfareData.get(position).getUrl())
+                    .placeholder(R.drawable.ic_default)
+                    .error(R.drawable.ic_error)
+                    .into(((WelfareViewHolder) holder).mWelfareImg);
+
+            ((WelfareViewHolder) holder).mWelfareImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickListener.OnItemClick(v, holder.getLayoutPosition());
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        if (mWelfareData.size() == 0 && mWelfareDiffView != null) {
+            return DataStatus.VIEW_TYPE_DIFF_STATUS;
+        } else {
+            return mWelfareData.size();
+        }
     }
 
     /**
@@ -70,6 +97,13 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.WelfareV
         WelfareViewHolder(View itemView) {
             super(itemView);
             mWelfareImg = (ImageView) itemView.findViewById(R.id.welfare_img);
+        }
+    }
+
+    class DiffViewHolder extends RecyclerView.ViewHolder {
+
+        public DiffViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

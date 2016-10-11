@@ -9,6 +9,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
@@ -19,9 +21,11 @@ import com.freegank.adapter.WelfareAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DetailData;
 import com.freegank.bean.IntentConstant;
+import com.freegank.constant.DataStatus;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
+import com.freegank.view.util.RCDiffStatusUtil;
 
 import java.util.List;
 
@@ -33,7 +37,8 @@ import retrofit2.Response;
  * Created by moubiao on 2016/9/18.
  * 福利界面的fragment
  */
-public class WelfareFragment extends LazyFragment<DetailData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
+public class WelfareFragment extends LazyFragment<DetailData> implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener,
+        View.OnClickListener {
     private final String TAG = "moubiao";
 
     private Context mContext;
@@ -42,8 +47,13 @@ public class WelfareFragment extends LazyFragment<DetailData> implements OnRefre
 
     private SwipeToLoadLayout mLoadLayout;
     private RecyclerView mRecyclerView;
+    private View mWelfareDiffView;
+    private TextView mNoDataTV;
+    private ImageButton mRefreshBT;
 
     private WelfareAdapter mAdapter;
+
+    private RCDiffStatusUtil mDiffStatusUtil;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +66,8 @@ public class WelfareFragment extends LazyFragment<DetailData> implements OnRefre
         mContext = getContext();
         mAdapter = new WelfareAdapter(mContext, mData);
         mAdapter.setOnItemClickListener(this);
+
+        mDiffStatusUtil = new RCDiffStatusUtil(mContext);
     }
 
     @Nullable
@@ -73,14 +85,34 @@ public class WelfareFragment extends LazyFragment<DetailData> implements OnRefre
         mRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.welfare_divider_height)));
+
+        mWelfareDiffView = mDiffStatusUtil.getStatusView(mLoadLayout);
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams layoutParams = mWelfareDiffView.getLayoutParams();
+                layoutParams.width = mRecyclerView.getWidth();
+                mWelfareDiffView.setLayoutParams(layoutParams);
+            }
+        });
+        mNoDataTV = (TextView) mWelfareDiffView.findViewById(R.id.no_data_tv);
+        mRefreshBT = (ImageButton) mWelfareDiffView.findViewById(R.id.refresh_bt);
+        mAdapter.setWelfareDiffView(mWelfareDiffView);
         mRecyclerView.setAdapter(mAdapter);
+
+        setListener();
 
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void setListener() {
+        mNoDataTV.setOnClickListener(this);
+        mRefreshBT.setOnClickListener(this);
+    }
+
     @Override
     protected void loadData() {
-        mLoadLayout.setRefreshing(true);
+        getRemoteData(true);
     }
 
     @Override
@@ -112,15 +144,20 @@ public class WelfareFragment extends LazyFragment<DetailData> implements OnRefre
             @Override
             public void onResponse(Call<BaseData<DetailData>> call, Response<BaseData<DetailData>> response) {
                 hideProgressBar(refresh);
-
                 BaseData<DetailData> result = response.body();
                 List<DetailData> data = result.getResults();
                 mData.addAll(data);
+                if (mData.size() == 0) {
+                    mDiffStatusUtil.setStatus(DataStatus.Status.EMPTY);
+                } else {
+                    mDiffStatusUtil.setStatus(DataStatus.Status.HAS_DATA);
+                }
             }
 
             @Override
             public void onFailure(Call<BaseData<DetailData>> call, Throwable t) {
                 hideProgressBar(refresh);
+                mDiffStatusUtil.setStatus(DataStatus.Status.ERROR);
                 t.printStackTrace();
             }
         });
@@ -132,5 +169,20 @@ public class WelfareFragment extends LazyFragment<DetailData> implements OnRefre
         } else {
             mLoadLayout.setLoadingMore(false);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.no_data_tv:
+                mDiffStatusUtil.setStatus(DataStatus.Status.LOADING);
+                break;
+            case R.id.refresh_bt:
+                mDiffStatusUtil.setStatus(DataStatus.Status.LOADING);
+                break;
+            default:
+                break;
+        }
+        getRemoteData(true);
     }
 }
