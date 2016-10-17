@@ -8,8 +8,10 @@
     app:cardElevation="@dimen/category_corner_radius">
 
     <LinearLayout
+        android:id="@+id/category_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
         android:orientation="vertical"
         android:padding="5dp">
 

@@ -191,7 +191,7 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
                 intent.setClass(mContext, MeiZhiActivity.class);
                 intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getContent());
                 break;
-            case R.id.overview_title_tx:
+            case R.id.overview_content:
                 intent.setClass(mContext, DailyDetailActivity.class);
                 intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getContent());
                 intent.putExtra(IntentConstant.DAILY_DATE, mData.get(position).getPublishedAt());

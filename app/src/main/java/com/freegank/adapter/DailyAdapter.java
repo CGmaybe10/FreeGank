@@ -99,10 +99,10 @@ public class DailyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        holder.mTitleTV.setOnClickListener(new View.OnClickListener() {
+        holder.mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mClickListener.OnItemClick(holder.mTitleTV, position);
+                mClickListener.OnItemClick(holder.mContentView, position);
             }
         });
     }
@@ -113,12 +113,14 @@ public class DailyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private class DailyViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImageView;
+        private View mContentView;
         private TextView mTitleTV;
         private TextView mDateTV;
 
         DailyViewHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.overview_img);
+            mContentView = itemView.findViewById(R.id.overview_content);
             mTitleTV = (TextView) itemView.findViewById(R.id.overview_title_tx);
             mDateTV = (TextView) itemView.findViewById(R.id.overview_date_tx);
         }

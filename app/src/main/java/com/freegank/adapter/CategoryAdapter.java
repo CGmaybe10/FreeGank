@@ -69,7 +69,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mItemClickListener.OnItemClick(((CategoryViewHolder) holder).mCategoryTitleTV, holder.getAdapterPosition());
+                    mItemClickListener.OnItemClick(((CategoryViewHolder) holder).mCategoryView, holder.getAdapterPosition());
                 }
             });
         }
@@ -90,10 +90,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private class CategoryViewHolder extends RecyclerView.ViewHolder {
+        private View mCategoryView;
         private TextView mCategoryTitleTV, mCategoryAuthorTV;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
+            mCategoryView = itemView.findViewById(R.id.category_content);
             mCategoryTitleTV = (TextView) itemView.findViewById(R.id.category_title_tv);
             mCategoryAuthorTV = (TextView) itemView.findViewById(R.id.category_author_tv);
         }
