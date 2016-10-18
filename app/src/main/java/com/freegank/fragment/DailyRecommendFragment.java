@@ -90,6 +90,7 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
         swipeToLoadLayout.setOnLoadMoreListener(this);
 
         mContentRY = (RecyclerView) view.findViewById(R.id.swipe_target);
+        mContentRY.setHasFixedSize(true);
         mContentRY.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mContentRY.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.daily_divider_height)));
 

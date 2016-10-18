@@ -86,6 +86,7 @@ public class WelfareFragment extends LazyFragment<DetailData> implements OnRefre
         mLoadLayout.setOnLoadMoreListener(this);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.addItemDecoration(new CommonItemDecoration(getResources().getDimensionPixelSize(R.dimen.welfare_divider_height)));
 
