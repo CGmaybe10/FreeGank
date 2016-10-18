@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -120,7 +122,9 @@ public class WelfareFragment extends LazyFragment<DetailData> implements OnRefre
     public void OnItemClick(View view, int position) {
         Intent intent = new Intent(mContext, MeiZhiActivity.class);
         intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getUrl());
-        startActivity(intent);
+        ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                view, getString(R.string.transition_anim));
+        ActivityCompat.startActivity(getActivity(), intent, compat.toBundle());
     }
 
     @Override

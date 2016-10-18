@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -189,17 +191,20 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
         switch (view.getId()) {
             case R.id.overview_img:
                 intent.setClass(mContext, MeiZhiActivity.class);
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                        view, getString(R.string.transition_anim));
                 intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getContent());
+                ActivityCompat.startActivity(getActivity(), intent, compat.toBundle());
                 break;
             case R.id.overview_content:
                 intent.setClass(mContext, DailyDetailActivity.class);
                 intent.putExtra(IntentConstant.MEI_ZHI_URL, mData.get(position).getContent());
                 intent.putExtra(IntentConstant.DAILY_DATE, mData.get(position).getPublishedAt());
+                startActivity(intent);
                 break;
             default:
                 break;
         }
-        startActivity(intent);
     }
 
     @Override
