@@ -1,9 +1,15 @@
 package com.freegank.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.MenuItem;
 
 import com.freegank.R;
 import com.freegank.adapter.MainAdapter;
@@ -14,10 +20,12 @@ import com.freegank.fragment.WelfareFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private final String TAG = "moubiao";
 
     private MainAdapter mMainAdapter;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
 
     @Override
     public int getLayoutResId() {
@@ -30,6 +38,7 @@ public class MainActivity extends BaseActivity {
 
         initData();
         initView();
+        setListener();
     }
 
     private void initData() {
@@ -90,6 +99,14 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView() {
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer);
+        mNavigationView = (NavigationView) findViewById(R.id.login_info_ng);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, mToolbar, R.string.app_name, R.string.category_app);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.category_tab);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.addTab(tabLayout.newTab());
@@ -105,5 +122,45 @@ public class MainActivity extends BaseActivity {
         ViewPager contentVP = (ViewPager) findViewById(R.id.tab_content_vp);
         contentVP.setAdapter(mMainAdapter);
         tabLayout.setupWithViewPager(contentVP);
+    }
+
+    private void setListener() {
+        mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.setting_item:
+
+                break;
+            default:
+                break;
+        }
+
+        mDrawerLayout.closeDrawers();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(mNavigationView);
+                break;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
