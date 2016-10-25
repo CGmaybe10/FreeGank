@@ -10,6 +10,4 @@
 
     <style name="StatusBarTransparentTheme" parent="AppTheme"/>
 
-    <style name="MeiZhiTheme" parent="AppTheme"/>
-
 </resources>
