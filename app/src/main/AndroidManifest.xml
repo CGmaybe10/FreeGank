@@ -25,7 +25,9 @@
         <activity android:name=".activity.DailyDetailActivity"/>
 
         <!--查看图片的activity-->
-        <activity android:name=".activity.MeiZhiActivity"/>
+        <activity
+            android:name=".activity.MeiZhiActivity"
+            android:theme="@style/MeiZhiTheme"/>
 
         <!--查看详细内容界面-->
         <activity android:name=".activity.ContentDetailActivity"/>
