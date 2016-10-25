@@ -93,7 +93,8 @@ public class MeiZhiActivity extends BaseActivity {
                     }
                 });
 
-        mMeiZhiIMG.setOnClickListener(new View.OnClickListener() {
+        View meiZhi = findViewById(R.id.mei_zhi_fl);
+        meiZhi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showOrHideToolbar();
