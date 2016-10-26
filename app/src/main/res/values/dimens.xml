@@ -3,7 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="toolbar_padding_top">0dp</dimen>
+    <dimen name="daily_detail_tool_bar_height">56dp</dimen>
+    <dimen name="daily_detail_tool_bar_padding_top">0dp</dimen>
 
     <dimen name="refresh_header_height_twitter">80dp</dimen>
     <dimen name="load_more_footer_height_twitter">60dp</dimen>
@@ -16,6 +17,7 @@
     <dimen name="category_divider_height">6dp</dimen>
     <dimen name="category_corner_radius">8dp</dimen>
     <dimen name="category_elevation">6dp</dimen>
+
 
     <dimen name="welfare_divider_height">8dp</dimen>
     <dimen name="welfare_corner_radius">8dp</dimen>
