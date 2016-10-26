@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/main_drawer"
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.MainActivity"
-    tools:openDrawer="left">
+    tools:context=".activity.MainActivity">
 
-    <include layout="@layout/main_content"/>
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/login_info_ng"
-        android:layout_width="240dp"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/main_drawer"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/login_info_header_layout"
-        app:menu="@menu/login_info_menu"/>
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
-</android.support.v4.widget.DrawerLayout>
+        <include layout="@layout/main_content"/>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/login_info_ng"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/login_info_header_layout"
+            app:menu="@menu/login_info_menu"/>
+
+    </android.support.v4.widget.DrawerLayout>
+</android.support.design.widget.CoordinatorLayout>
