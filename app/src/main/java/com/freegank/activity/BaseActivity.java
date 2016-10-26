@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 
@@ -23,29 +22,24 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Toolbar mToolbar;
     protected boolean isToolBarHiding = false;
+    protected View mStatusBarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
-        setStatusBarTranslucent();
+        setStatusBar();
         initToolbar();
     }
 
-    private void setStatusBarTranslucent() {
+    /**
+     * 设置状态栏效果
+     */
+    protected void setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {//版本为4.4时
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            ViewGroup contentLayout = (ViewGroup) findViewById(android.R.id.content);
-            setupStatusBarView(contentLayout, ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+            mStatusBarView = DisplayUtil.setupStatusBarColor(this, ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
         }
-    }
-
-    private void setupStatusBarView(ViewGroup contentLayout, int color) {
-        View statusBarView = new View(this);
-        statusBarView.setBackgroundColor(color);
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtil.getStatusBarHeight(this));
-        contentLayout.addView(statusBarView, lp);
     }
 
     private void initToolbar() {

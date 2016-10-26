@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.freegank.bean.IntentConstant;
 import com.freegank.http.GankApiService;
 import com.freegank.http.RetrofitHelper;
 import com.freegank.interfaces.OnItemClickListener;
+import com.freegank.util.DisplayUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -60,12 +62,20 @@ public class DailyDetailActivity extends BaseActivity implements OnItemClickList
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
+    protected void setStatusBar() {
+        super.setStatusBar();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            View decorView = getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                View decorView = getWindow().getDecorView();
+                int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                decorView.setSystemUiVisibility(option);
+                if (mStatusBarView == null) {
+                    mStatusBarView = DisplayUtil.setupStatusBarView(this);
+                }
+            }
+
+            mStatusBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorTranslucent));
         }
     }
 

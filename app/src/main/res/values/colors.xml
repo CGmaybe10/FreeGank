@@ -7,4 +7,6 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#ffffff</color>
     <color name="titleColor">#333333</color>
+
+    <color name="colorTranslucent">#33000000</color>
 </resources>
