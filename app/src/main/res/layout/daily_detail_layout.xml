@@ -32,8 +32,8 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:paddingTop="24dp"
+                android:layout_height="@dimen/daily_detail_tool_bar_height"
+                android:paddingTop="@dimen/daily_detail_tool_bar_padding_top"
                 app:layout_collapseMode="pin"/>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
