@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.freegank.R;
 import com.freegank.bean.DetailData;
 import com.freegank.interfaces.OnItemClickListener;
+import com.freegank.util.DisplayUtil;
 
 import java.util.List;
 
@@ -39,6 +40,11 @@ public class DailyDetailAdapter extends RecyclerView.Adapter<DailyDetailAdapter.
 
     @Override
     public void onBindViewHolder(final DailyDetailAdapter.DailyDetailViewHolder holder, int position) {
+        if (position == 0) {
+            holder.mCategoryTV.setPadding(DisplayUtil.dp2px(mContext, 10f), DisplayUtil.dp2px(mContext, 16f),
+                    DisplayUtil.dp2px(mContext, 10f), DisplayUtil.dp2px(mContext, 5f));
+        }
+
         DetailData data = mDetailData.get(position);
         if (position == 0) {
             showCategoryTitle(holder.mCategoryTV, true);
