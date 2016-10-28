@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:id="@+id/item_container"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <WebView
-        android:id="@+id/content_wv"
+    <include layout="@layout/top_bar"/>
+
+    <FrameLayout
+        android:id="@+id/item_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/item_loading_status"
-        layout="@layout/diff_status_layout"/>
-</FrameLayout>
+        <WebView
+            android:id="@+id/content_wv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/item_loading_status"
+            layout="@layout/diff_status_layout"/>
+    </FrameLayout>
+</LinearLayout>

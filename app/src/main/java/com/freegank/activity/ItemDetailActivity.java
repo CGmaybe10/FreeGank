@@ -2,6 +2,7 @@ package com.freegank.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -17,6 +18,7 @@ import com.freegank.bean.IntentConstant;
 
 /**
  * Created by moubiao on 2016/10/9.
+ * 休息视频的activity
  */
 
 public class ItemDetailActivity extends BaseActivity {
@@ -52,6 +54,8 @@ public class ItemDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mContainerFL = (FrameLayout) findViewById(R.id.item_container);
 
         mContentWV = (WebView) findViewById(R.id.content_wv);
@@ -79,6 +83,7 @@ public class ItemDetailActivity extends BaseActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
+                mToolbar.setTitle(title);
                 displayLoadingStatus(false, true);
             }
         });
@@ -128,6 +133,19 @@ public class ItemDetailActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
         if (mContentWV.canGoBack()) {
             mContentWV.goBack();
@@ -139,7 +157,6 @@ public class ItemDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         if (mContentWV != null) {
             mContainerFL.removeView(mContentWV);
             mContentWV.setWebViewClient(null);
