@@ -59,8 +59,8 @@ public class ItemDetailActivity extends BaseActivity {
         settings.setSupportZoom(true);
         mContentWV.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                mContentWV.loadUrl(contentUrl);
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
                 return true;
             }
 
@@ -120,6 +120,15 @@ public class ItemDetailActivity extends BaseActivity {
             mStatusView.setVisibility(View.VISIBLE);
             mLoadingPro.setVisibility(View.GONE);
             mErrorView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mContentWV.canGoBack()) {
+            mContentWV.goBack();
+        } else {
+            super.onBackPressed();
         }
     }
 }
