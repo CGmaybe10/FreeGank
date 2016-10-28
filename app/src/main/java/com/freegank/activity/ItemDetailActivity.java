@@ -9,6 +9,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.freegank.R;
@@ -24,6 +25,7 @@ public class ItemDetailActivity extends BaseActivity {
     private String contentUrl;
     private boolean mLoadingFlag = true;
 
+    private FrameLayout mContainerFL;
     private WebView mContentWV;
     private View mStatusView;
     private View mLoadingPro;
@@ -50,6 +52,8 @@ public class ItemDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+        mContainerFL = (FrameLayout) findViewById(R.id.item_container);
+
         mContentWV = (WebView) findViewById(R.id.content_wv);
         WebSettings settings = mContentWV.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -129,6 +133,20 @@ public class ItemDetailActivity extends BaseActivity {
             mContentWV.goBack();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mContentWV != null) {
+            mContainerFL.removeView(mContentWV);
+            mContentWV.setWebViewClient(null);
+            mContentWV.setWebChromeClient(null);
+            mContentWV.removeAllViews();
+            mContentWV.destroy();
+            mContentWV = null;
         }
     }
 }
