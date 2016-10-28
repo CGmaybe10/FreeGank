@@ -16,7 +16,7 @@ import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.freegank.R;
-import com.freegank.activity.ContentDetailActivity;
+import com.freegank.activity.ItemDetailActivity;
 import com.freegank.adapter.CategoryAdapter;
 import com.freegank.bean.BaseData;
 import com.freegank.bean.DetailData;
@@ -165,7 +165,7 @@ public class CategoryFragment extends LazyFragment<DetailData> implements OnRefr
 
     @Override
     public void OnItemClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
+        Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
         intent.putExtra(IntentConstant.CONTENT_URL, mData.get(position).getUrl());
         startActivity(intent);
     }

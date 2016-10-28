@@ -148,14 +148,14 @@ public class DailyDetailActivity extends BaseActivity implements OnItemClickList
 
     @Override
     public void OnItemClick(View view, int position) {
-        Intent intent = new Intent(DailyDetailActivity.this, ContentDetailActivity.class);
+        Intent intent = new Intent(DailyDetailActivity.this, ItemDetailActivity.class);
         intent.putExtra(IntentConstant.CONTENT_URL, mDetailData.get(position).getUrl());
         startActivity(intent);
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(DailyDetailActivity.this, ContentDetailActivity.class);
+        Intent intent = new Intent(DailyDetailActivity.this, ItemDetailActivity.class);
         intent.putExtra(IntentConstant.CONTENT_URL, mDetailData.get(mDetailData.size() - 1).getUrl());
         startActivity(intent);
     }

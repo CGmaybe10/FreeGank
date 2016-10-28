@@ -32,7 +32,7 @@
         <activity android:name=".activity.MeiZhiActivity"/>
 
         <!--查看详细内容界面-->
-        <activity android:name=".activity.ContentDetailActivity"/>
+        <activity android:name=".activity.ItemDetailActivity"/>
     </application>
 
 </manifest>

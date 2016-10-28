@@ -27,9 +27,9 @@ public class RCDiffStatusUtil {
 
     public View getStatusView(ViewGroup parent) {
         mDiffStatusView = LayoutInflater.from(mContext).inflate(R.layout.diff_status_layout, parent, false);
-        mErrorView = mDiffStatusView.findViewById(R.id.error);
-        mEmptyView = mDiffStatusView.findViewById(R.id.empty);
-        mLoadingView = mDiffStatusView.findViewById(R.id.loading);
+        mErrorView = mDiffStatusView.findViewById(R.id.status_error);
+        mEmptyView = mDiffStatusView.findViewById(R.id.status_empty);
+        mLoadingView = mDiffStatusView.findViewById(R.id.status_loading);
 
         return mDiffStatusView;
     }

@@ -5,17 +5,17 @@
              android:orientation="vertical">
 
     <include
-        android:id="@+id/error"
+        android:id="@+id/status_error"
         layout="@layout/error_data_layout"
         android:visibility="gone"/>
 
     <include
-        android:id="@+id/empty"
+        android:id="@+id/status_empty"
         layout="@layout/empty_data_layout"
         android:visibility="gone"/>
 
     <include
-        android:id="@+id/loading"
+        android:id="@+id/status_loading"
         layout="@layout/loading_data_layout"/>
 
 </FrameLayout>
