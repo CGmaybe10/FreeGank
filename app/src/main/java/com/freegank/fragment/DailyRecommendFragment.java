@@ -119,7 +119,6 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
     @Override
     public void onRefresh() {
         mPage = 1;
-        mData.clear();
         getRemoteData(true);
     }
 
@@ -157,6 +156,9 @@ public class DailyRecommendFragment extends LazyFragment<DailyOverviewData> impl
                     Date date = DateUtil.string2Date(daily.getPublishedAt(), "yyyy-MM-dd");
                     String dateStr = DateUtil.date2String(date, "yyyy/MM/dd");
                     daily.setPublishedAt(dateStr);
+                }
+                if (refresh) {
+                    mData.clear();
                 }
                 mData.addAll(dailyList);
                 if (mData.size() == 0) {
